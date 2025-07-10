@@ -33,6 +33,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.backgroundColor = [UIColor systemBackgroundColor];
+    _tableView.tableFooterView = [UITableView new]; // Hide empty cells
     [self.view addSubview:_tableView];
 
     [NSLayoutConstraint activateConstraints:@[
