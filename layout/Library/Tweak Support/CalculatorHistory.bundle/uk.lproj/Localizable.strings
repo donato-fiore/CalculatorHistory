@@ -1,0 +1,7 @@
+HISTORY = "Історія";
+DONE = "Готово";
+CLEAR = "Очистити";
+NO_HISTORY = "Немає історії";
+DELETE = "Видалити";
+COPY_RESULT = "Копіювати результат";
+COPY_EXPRESSION = "Копіювати рівняння";

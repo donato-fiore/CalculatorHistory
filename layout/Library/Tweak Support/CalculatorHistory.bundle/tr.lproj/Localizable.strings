@@ -1,0 +1,7 @@
+HISTORY = "Geçmiş";
+DONE = "Bitti";
+CLEAR = "Temizle";
+NO_HISTORY = "Geçmiş Yok";
+DELETE = "Sil";
+COPY_RESULT = "Sonucu Kopyala";
+COPY_EXPRESSION = "Denklemi Kopyala";

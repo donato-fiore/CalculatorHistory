@@ -1,0 +1,7 @@
+HISTORY = "Historik";
+DONE = "Klar";
+CLEAR = "Rensa";
+NO_HISTORY = "Ingen historik";
+DELETE = "Ta bort";
+COPY_RESULT = "Kopiera resultat";
+COPY_EXPRESSION = "Kopiera ekvation";

@@ -1,0 +1,7 @@
+HISTORY = "历史";
+DONE = "完成";
+CLEAR = "清除";
+NO_HISTORY = "暂无历史记录";
+DELETE = "删除";
+COPY_RESULT = "复制结果";
+COPY_EXPRESSION = "复制公式";

@@ -1,0 +1,11 @@
+HISTORY = "Cronologia";
+DONE = "Fatto";
+CLEAR = "Cancella";
+
+NO_HISTORY = "Nessuna cronologia";
+
+DELETE = "Elimina";
+
+COPY_RESULT = "Copia risultato";
+
+COPY_EXPRESSION = "Copia equazione";

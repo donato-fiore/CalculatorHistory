@@ -1,0 +1,11 @@
+HISTORY = "歷史記錄";
+DONE = "完成";
+CLEAR = "清除";
+
+NO_HISTORY = "沒有歷史記錄";
+
+DELETE = "刪除";
+
+COPY_RESULT = "複製結果";
+
+COPY_EXPRESSION = "複製方程式";

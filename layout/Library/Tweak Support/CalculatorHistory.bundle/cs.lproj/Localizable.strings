@@ -1,0 +1,11 @@
+HISTORY = "Historie";
+DONE = "Hotovo";
+CLEAR = "Vymazat";
+
+NO_HISTORY = "Žádná historie";
+
+DELETE = "Smazat";
+
+COPY_RESULT = "Kopírovat výsledek";
+
+COPY_EXPRESSION = "Kopírovat rovnici";

@@ -1,0 +1,11 @@
+HISTORY = "Előzmények";
+DONE = "Kész";
+CLEAR = "Törlés";
+
+NO_HISTORY = "Nincs előzmény";
+
+DELETE = "Törlés";
+
+COPY_RESULT = "Eredmény másolása";
+
+COPY_EXPRESSION = "Egyenlet másolása";

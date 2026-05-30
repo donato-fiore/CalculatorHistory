@@ -1,0 +1,7 @@
+HISTORY = "السجل";
+DONE = "تم";
+CLEAR = "مسح";
+NO_HISTORY = "لا يوجد سجل";
+DELETE = "حذف";
+COPY_RESULT = "نسخ النتيجة";
+COPY_EXPRESSION = "نسخ المعادلة";

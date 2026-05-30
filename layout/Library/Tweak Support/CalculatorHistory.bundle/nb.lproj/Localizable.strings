@@ -1,0 +1,11 @@
+HISTORY = "Historikk";
+DONE = "Ferdig";
+CLEAR = "Tøm";
+
+NO_HISTORY = "Ingen historikk";
+
+DELETE = "Slett";
+
+COPY_RESULT = "Kopier resultat";
+
+COPY_EXPRESSION = "Kopier ligning";

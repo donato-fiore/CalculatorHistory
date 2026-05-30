@@ -1,0 +1,11 @@
+HISTORY = "Sejarah";
+DONE = "Selesai";
+CLEAR = "Kosongkan";
+
+NO_HISTORY = "Tiada Sejarah";
+
+DELETE = "Padam";
+
+COPY_RESULT = "Salin Hasil";
+
+COPY_EXPRESSION = "Salin Persamaan";

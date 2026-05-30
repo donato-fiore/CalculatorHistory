@@ -1,0 +1,13 @@
+HISTORY = "Istoric";
+DONE = "Gata";
+CLEAR = "Șterge";
+
+// There are no history items, so we show a message to the user instead of an empty list.
+NO_HISTORY = "Fără istoric";
+
+DELETE = "Șterge";
+
+COPY_RESULT = "Copiază rezultatul";
+
+// Copy mathematical equation to clipboard
+COPY_EXPRESSION = "Copiază ecuația";

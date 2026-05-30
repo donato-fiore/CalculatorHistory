@@ -1,0 +1,10 @@
+HISTORY = "History";
+DONE = "Done";
+CLEAR = "Clear";
+
+NO_HISTORY = "No History";
+
+DELETE = "Delete";
+
+COPY_RESULT = "Copy Result";
+COPY_EXPRESSION = "Copy Expression";

@@ -1,0 +1,11 @@
+HISTORY = "Verlauf";
+DONE = "Fertig";
+CLEAR = "Löschen";
+
+NO_HISTORY = "Kein Verlauf";
+
+DELETE = "Löschen";
+
+COPY_RESULT = "Ergebnis kopieren";
+
+COPY_EXPRESSION = "Gleichung kopieren";

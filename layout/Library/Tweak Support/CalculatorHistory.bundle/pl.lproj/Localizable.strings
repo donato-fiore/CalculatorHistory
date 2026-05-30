@@ -1,0 +1,7 @@
+HISTORY = "Historia";
+DONE = "Gotowe";
+CLEAR = "Wyczyść";
+NO_HISTORY = "Brak historii";
+DELETE = "Usuń";
+COPY_RESULT = "Kopiuj wynik";
+COPY_EXPRESSION = "Kopiuj równanie";

@@ -1,0 +1,11 @@
+HISTORY = "ประวัติ";
+DONE = "เสร็จสิ้น";
+CLEAR = "ล้าง";
+
+NO_HISTORY = "ไม่มีประวัติ";
+
+DELETE = "ลบ";
+
+COPY_RESULT = "คัดลอกผลลัพธ์";
+
+COPY_EXPRESSION = "คัดลอกสมการ";

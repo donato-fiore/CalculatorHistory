@@ -1,0 +1,7 @@
+HISTORY = "Histórico";
+DONE = "Concluído";
+CLEAR = "Limpar";
+NO_HISTORY = "Sem histórico";
+DELETE = "Apagar";
+COPY_RESULT = "Copiar resultado";
+COPY_EXPRESSION = "Copiar equação";

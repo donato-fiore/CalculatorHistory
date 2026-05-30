@@ -1,0 +1,11 @@
+HISTORY = "Geschiedenis";
+DONE = "Gereed";
+CLEAR = "Wissen";
+
+NO_HISTORY = "Geen geschiedenis";
+
+DELETE = "Verwijderen";
+
+COPY_RESULT = "Resultaat kopiëren";
+
+COPY_EXPRESSION = "Vergelijking kopiëren";

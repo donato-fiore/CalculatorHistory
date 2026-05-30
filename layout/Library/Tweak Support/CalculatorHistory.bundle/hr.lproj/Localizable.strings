@@ -1,0 +1,7 @@
+HISTORY = "Povijest";
+DONE = "Gotovo";
+CLEAR = "Očisti";
+NO_HISTORY = "Nema povijesti";
+DELETE = "Izbriši";
+COPY_RESULT = "Kopiraj rezultat";
+COPY_EXPRESSION = "Kopiraj jednadžbu";

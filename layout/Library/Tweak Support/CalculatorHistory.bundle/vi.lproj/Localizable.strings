@@ -1,0 +1,11 @@
+HISTORY = "Lịch sử";
+DONE = "Xong";
+CLEAR = "Xóa";
+
+NO_HISTORY = "Không có lịch sử";
+
+DELETE = "Xóa";
+
+COPY_RESULT = "Sao chép kết quả";
+
+COPY_EXPRESSION = "Sao chép phương trình";

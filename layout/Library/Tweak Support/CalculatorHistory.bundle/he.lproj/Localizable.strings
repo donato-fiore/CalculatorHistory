@@ -1,0 +1,7 @@
+HISTORY = "היסטוריה";
+DONE = "סיום";
+CLEAR = "נקה";
+NO_HISTORY = "אין היסטוריה";
+DELETE = "מחק";
+COPY_RESULT = "העתק תוצאה";
+COPY_EXPRESSION = "העתק משוואה";

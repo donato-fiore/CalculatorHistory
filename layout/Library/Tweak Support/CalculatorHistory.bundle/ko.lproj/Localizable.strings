@@ -1,0 +1,7 @@
+HISTORY = "기록";
+DONE = "완료";
+CLEAR = "지우기";
+NO_HISTORY = "기록 없음";
+DELETE = "삭제";
+COPY_RESULT = "결과 복사";
+COPY_EXPRESSION = "수식 복사";

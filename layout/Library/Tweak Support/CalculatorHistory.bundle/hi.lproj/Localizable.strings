@@ -1,0 +1,11 @@
+HISTORY = "इतिहास";
+DONE = "पूर्ण";
+CLEAR = "साफ़ करें";
+
+NO_HISTORY = "कोई इतिहास नहीं";
+
+DELETE = "हटाएँ";
+
+COPY_RESULT = "परिणाम कॉपी करें";
+
+COPY_EXPRESSION = "समीकरण कॉपी करें";

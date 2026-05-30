@@ -1,0 +1,11 @@
+HISTORY = "Historial";
+DONE = "Fet";
+CLEAR = "Esborra";
+
+NO_HISTORY = "No hi ha historial";
+
+DELETE = "Suprimeix";
+
+COPY_RESULT = "Copia el resultat";
+
+COPY_EXPRESSION = "Copia l'equació";

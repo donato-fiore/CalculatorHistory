@@ -1,0 +1,13 @@
+HISTORY = "Historik";
+DONE = "Færdig";
+CLEAR = "Ryd";
+
+// There are no history items, so we show a message to the user instead of an empty list.
+NO_HISTORY = "Ingen historik";
+
+DELETE = "Slet";
+
+COPY_RESULT = "Kopiér resultat";
+
+// Copy mathematical equation to clipboard
+COPY_EXPRESSION = "Kopiér ligning";
