@@ -1,13 +1,17 @@
 #import <dlfcn.h>
 
 #import "Tweak.h"
-#import "CalculatorHistoryRecordManager.h"
+
 #import "CalculatorHistoryRecord.h"
+#import "CalculatorHistoryRecordManager.h"
+#import "CalculatorHistoryExpressionFormatter.h"
 
 #import "Utils.h"
 #import "CalculatorHistoryViewController.h"
 
 #import "Extensions/UIImage+CalculatorHistory.h"
+
+NSString *CalculateKeyNumberFormatter;
 
 NSInteger specialBehavior;
 bool bypassDefault;
@@ -43,10 +47,27 @@ bool bypassDefault;
 
 %new
 - (void)_historyButtonTapped {
-	CalculatorHistoryViewController *vc = [[CalculatorHistoryViewController alloc] init];
-	UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-	nav.modalPresentationStyle = UIModalPresentationFormSheet;
-	[((UIView *)self).window.rootViewController presentViewController:nav animated:YES completion:nil];
+    CalculatorHistoryViewController *vc = [[CalculatorHistoryViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+
+    nav.modalPresentationStyle = UIModalPresentationPageSheet;
+
+    if (@available(iOS 15.0, *)) {
+        UISheetPresentationController *sheet = nav.sheetPresentationController;
+
+        sheet.detents = @[
+            [UISheetPresentationControllerDetent mediumDetent],
+            [UISheetPresentationControllerDetent largeDetent]
+        ];
+
+        sheet.selectedDetentIdentifier = UISheetPresentationControllerDetentIdentifierMedium;
+        sheet.prefersGrabberVisible = YES;
+        sheet.prefersScrollingExpandsWhenScrolledToEdge = YES;
+        sheet.largestUndimmedDetentIdentifier = nil;
+    }
+
+    UIViewController *rootViewController = ((UIView *)self).window.rootViewController;
+    [rootViewController presentViewController:nav animated:YES completion:nil];
 }
 
 %end
@@ -59,11 +80,11 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
 	NSString *expression = [NSString stringWithUTF8String:expr];
 	NSString *answerString = [NSString stringWithUTF8String:answer];
 
-    NSString *formatted = parseExpression(expression);
+    NSString *formatted = [[CalculatorHistoryExpressionFormatter sharedFormatter] parseExpression:expression];
     if ([formatted length] == 0 || [answerString length] == 0 || [expression containsString:@".)"]) return ret;
     
     NSString *result = [NSString stringWithFormat:@"%@ = %@", formatted, answerString];
-    NSLog(@"[calc] original format: %@", result);
+    NSLog(@"original format: %@", result);
 
     NSMutableString *mutableResult = [result mutableCopy];
     NSString *regexPattern = @"\\d+\\.?\\d*"; // match numbers
@@ -71,7 +92,7 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
     NSArray* matches = [regex matchesInString:result options:0 range:NSMakeRange(0, result.length)];
     for (NSTextCheckingResult *match in matches) {
         NSString *strNumber = [result substringWithRange:match.range];
-        NSLog(@"[calc] match: %@", strNumber);
+        NSLog(@"match: %@", strNumber);
 
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
         numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
@@ -91,13 +112,13 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
         NSRange rangeOfOriginalNumber = [mutableResult rangeOfString:strNumber];
         if (rangeOfOriginalNumber.location != NSNotFound) {
             numberFormatter.locale = [NSLocale currentLocale];
-            NSLog(@"[calc] replacing %@ with %@", strNumber, [numberFormatter stringFromNumber:number]);
+            NSLog(@"replacing %@ with %@", strNumber, [numberFormatter stringFromNumber:number]);
             [mutableResult replaceCharactersInRange:rangeOfOriginalNumber withString:[numberFormatter stringFromNumber:number]];
         }
     }
 
     result = [mutableResult copy];
-    NSLog(@"[calc] new format: %@", result);
+    NSLog(@"new format: %@", result);
 
     if ([[result componentsSeparatedByString:@" = "].firstObject containsString:@"E"] && [[result componentsSeparatedByString:@" = "].firstObject containsString:@">>"]) {
         NSRange range = rangeOfNthOccurrence(result, @">>", 1);
@@ -123,7 +144,7 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
     CalculatorHistoryRecord *record = [[CalculatorHistoryRecord alloc] initWithExpression:result];
     [[CalculatorHistoryRecordManager sharedManager] addRecord:record];
 
-    NSLog(@"[calc] logging: %@", result);
+    NSLog(@"logging: %@", result);
 	
     return ret;
 }
@@ -175,12 +196,51 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
 
 %end
 
+%hook _UIContextMenuCellContentView
+
+- (void)setSubtitle:(NSString *)subtitle {
+    if (!subtitle || ![subtitle hasPrefix:CalcHistoryAttributedSubtitlePrefix]) {
+        %orig;
+        return;
+    }
+
+    NSString *rawSubtitle = [subtitle substringFromIndex:CalcHistoryAttributedSubtitlePrefix.length];
+
+    // Remove trailing " =" if present.
+    if ([rawSubtitle hasSuffix:@" ="]) {
+        rawSubtitle = [rawSubtitle substringToIndex:rawSubtitle.length - 2];
+    }
+
+    %orig(rawSubtitle);
+
+    UILabel *subtitleLabel = [self subtitleLabel];
+    if (!subtitleLabel) {
+        return;
+    }
+
+    UIFont *font = [subtitleLabel font] ?: [UIFont systemFontOfSize:12.0];
+    UIColor *color = [subtitleLabel textColor] ?: [UIColor secondaryLabelColor];
+
+    NSAttributedString *attributedSubtitle = [[CalculatorHistoryExpressionFormatter sharedFormatter] formatEquation:rawSubtitle
+                                                                                                               font:font
+                                                                                                              color:color
+                                                                                                     expressionOnly:YES];
+
+    if ([attributedSubtitle length] > 0) {
+        subtitleLabel.attributedText = attributedSubtitle;
+    }
+}
+
+%end
 
 %ctor {
     int (*CalculatePerformExpression)(char *, int, int, char *);
 	void *handle = dlopen("/System/Library/PrivateFrameworks/Calculate.framework/Calculate", RTLD_LAZY);
 	CalculatePerformExpression = dlsym(handle, "CalculatePerformExpression");
 
+    CalculateKeyNumberFormatter = @"CalculateKeyNumberFormatter";
+
+    void (*MSHookFunction)(void *, void *, void **) = dlsym(RTLD_DEFAULT, "MSHookFunction");
 	MSHookFunction(CalculatePerformExpression, (void *)hooked_CalculatePerformExpression, (void **)&orig_CalculatePerformExpression);
 
 	%init(DisplayView = objc_getClass("Calculator.DisplayView"), CalculatorModel = objc_getClass("Calculator.CalculatorModel"));

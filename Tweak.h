@@ -1,9 +1,11 @@
 #import <UIKit/UIKit.h>
 
-#ifdef DEBUG
-#define NSLog(...)                      NSLog(__VA_ARGS__);
+#define NSLog(...) NSLog(@"[CalculatorHistory] [%s:L%d] %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__])
+
+#if TARGET_OS_SIMULATOR
+#define ROOT_PATH_NS(nsPath) [NSString stringWithFormat:@"/opt/simject%@", nsPath]
 #else
-#define NSLog(...) {}
+#import <rootless.h>
 #endif
 
 typedef NS_ENUM(NSInteger, SpecialBehavior) {
@@ -82,12 +84,44 @@ typedef NS_ENUM(NSInteger, CalculatorButtonID) {
     CalculatorButton_inverseHyperbolicTangent,
 };
 
+extern NSString *CalculateKeyNumberFormatter;
+
+@interface CalculateResult : NSObject
+@property (readonly, nonatomic) NSString *formattedResult;
+@property (nonatomic, copy) NSArray<NSLocale *> *locales;
+@end
+
+@interface Calculate : NSObject
+
++ (CalculateResult *)evaluate:(NSString *)expression
+                      options:(NSDictionary *)options;
+
+@end
+
+@interface CalculatorModel : NSObject
+@end
+
+@interface DisplayValue : NSObject
+@end
+
+@interface CalculatorController : NSObject
+
+- (void)calculatorModel:(CalculatorModel *)model
+        didUpdateDisplayValue:(DisplayValue *)displayValue
+           shouldFlashDisplay:(BOOL)shouldFlash;
+
+@end
+
 @interface DisplayView : UIView
 - (UILabel *)accessibilityValueLabel;
 @end
 
 @interface CalculatorKeypadButton : UIView
 - (NSInteger)accessibilityCalculatorButtonID;
+@end
+
+@interface _UIContextMenuCellContentView : UIView
+@property (retain, nonatomic) UILabel *subtitleLabel;
 @end
 
 @interface DisplayView (CalculatorHistory)

@@ -1,13 +1,24 @@
 #import "Tweak.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+static NSString * const CalcHistoryAttributedSubtitlePrefix = @"ATTR://";
+
 extern NSInteger specialBehavior;
 extern bool bypassDefault;
 
-NSInteger indexOf(NSString *string, NSString *substring);
 NSRange rangeOfNthOccurrence(NSString *string, NSString *substring, NSInteger occurrence);
-NSString *superscript(NSString *string);
-NSString *subscript(NSString *string);
-NSString *relativeDateFormat(NSDate *date);
-bool isLabelTruncated(UILabel *label);
-NSAttributedString *formatExpression(NSString *equation);
-NSString *parseExpression(NSString *expression);
+
+NS_INLINE NSString *superscript(NSString *string) {
+    return [NSString stringWithFormat:@">>%@>>", string];
+}
+
+NS_INLINE NSString *subscript(NSString *string) {
+    return [NSString stringWithFormat:@"<<%@<<", string];
+}
+
+#ifdef __cplusplus
+}
+#endif
