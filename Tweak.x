@@ -72,10 +72,18 @@ bool bypassDefault;
 
 %end
 
-int (*orig_CalculatePerformExpression)(char* expr, int significantDigits, int flags, char* answer);
-int hooked_CalculatePerformExpression(char* expr, int significantDigits, int flags, char* answer) {
+%group ExpressionHook
+
+// Calculator evaluates through CalculatePerformExpression, but that is a 3-instruction thunk
+// (mov w4, #0x400; mov x5, #0; b CalculateExpressionError). A hook that small and that far from the tweak can only
+// be done by ElleKit with its breakpoint exception handler, which gets the process killed (EXC_GUARD) on some
+// setups. Hook the function the thunk tail-calls instead, which is big enough for a normal patch.
+%hookf(int, CalculateExpressionError, char *expr, int significantDigits, int flags, char *answer, int size, void *error) {
+    // Calls that come through the thunk are the ones with size 0x400 and no error out parameter.
+    if (size != 0x400 || error != NULL) return %orig;
+
     bypassDefault = false;
-	bool ret = orig_CalculatePerformExpression(expr, significantDigits, flags, answer);
+	int ret = %orig;
 
 	NSString *expression = [NSString stringWithUTF8String:expr];
 	NSString *answerString = [NSString stringWithUTF8String:answer];
@@ -148,6 +156,8 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
 	
     return ret;
 }
+
+%end
 
 %hook CalculatorModel
 
@@ -234,14 +244,14 @@ int hooked_CalculatePerformExpression(char* expr, int significantDigits, int fla
 %end
 
 %ctor {
-    int (*CalculatePerformExpression)(char *, int, int, char *);
-	void *handle = dlopen("/System/Library/PrivateFrameworks/Calculate.framework/Calculate", RTLD_LAZY);
-	CalculatePerformExpression = dlsym(handle, "CalculatePerformExpression");
-
     CalculateKeyNumberFormatter = @"CalculateKeyNumberFormatter";
 
-    void (*MSHookFunction)(void *, void *, void **) = dlsym(RTLD_DEFAULT, "MSHookFunction");
-	MSHookFunction(CalculatePerformExpression, (void *)hooked_CalculatePerformExpression, (void **)&orig_CalculatePerformExpression);
+	static const char *calculatePath = "/System/Library/PrivateFrameworks/Calculate.framework/Calculate";
+	dlopen(calculatePath, RTLD_LAZY);
+	void *calculateExpressionError = MSFindSymbol(MSGetImageByName(calculatePath), "_CalculateExpressionError");
+	if (calculateExpressionError) {
+		%init(ExpressionHook, CalculateExpressionError = calculateExpressionError);
+	}
 
 	%init(DisplayView = objc_getClass("Calculator.DisplayView"), CalculatorModel = objc_getClass("Calculator.CalculatorModel"));
 }
